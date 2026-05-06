@@ -1,6 +1,7 @@
 using SharpAstrology.Enums;
 using SharpAstrology.DataModels;
 using SharpAstrology.Definitions;
+using System.Diagnostics;
 
 namespace SharpAstrology.Utility;
 
@@ -10,7 +11,7 @@ namespace SharpAstrology.Utility;
 public static class HumanDesignUtility
 {
     private const double HdOffsetToZodiac = 3.875;
-    private const double DegreePerGate = 5.626;
+    private const double DegreePerGate = 5.625;
     private const double DegreePerLine = 0.9375;
     private const double DegreePerColor = 0.15625;
     private const double DegreePerTone = DegreePerColor / 6;
@@ -57,14 +58,18 @@ public static class HumanDesignUtility
     {
         var x = longitude - HdOffsetToZodiac;
         if (x < 0) x += 360;
-            
+						
         return new Activation()
         {
             Gate = (Gates)Math.Floor(x / DegreePerGate),
             Line = (Lines)Math.Floor((x % DegreePerGate) / DegreePerLine) + 1,
             Color = (Color)Math.Floor((x % DegreePerLine) / DegreePerColor) + 1,
             Tone = (Tone)Math.Floor((x % DegreePerColor) / DegreePerTone) + 1,
-            Base = (Base)Math.Floor((x % DegreePerTone) / DegreePerBase) + 1
+            Base = (Base)Math.Floor((x % DegreePerTone) / DegreePerBase) + 1,
+						ColorPercentage = ((x % DegreePerColor) / DegreePerColor) * 100.0,
+						TonePercentage = ((x % DegreePerTone) / DegreePerTone) * 100.0,
+						BasePercentage = ((x % DegreePerBase) / DegreePerBase) * 100.0,
+						Longitude = longitude,
         };
     }
     
@@ -73,7 +78,7 @@ public static class HumanDesignUtility
     /// </summary>
     /// <param name="splits">The number of splits.</param>
     /// <returns>The corresponding SplitDefinitions enum.</returns>
-    /// <exception cref="ArgumentException">Thrown when the number of splits is not within the expected range (0-4).</exception>
+    /// <exception cref="UnreachableException">Thrown when the number of splits is not within the expected range (0-4).</exception>
     public static SplitDefinitions SplitDefinition(int splits)
     {
         return splits switch
@@ -83,7 +88,7 @@ public static class HumanDesignUtility
             2 => SplitDefinitions.SplitDefinition,
             3 => SplitDefinitions.TripleSplit,
             4 => SplitDefinitions.QuadrupleSplit,
-            _ => throw new ArgumentException($"To much splits: {splits}")
+            _ => throw new UnreachableException($"To many splits: {splits}")
         };
     }
 
