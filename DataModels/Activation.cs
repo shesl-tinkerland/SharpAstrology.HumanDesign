@@ -33,27 +33,27 @@ public sealed class Activation
     /// Gets the base that's related to the particular activation. The base is a subdivision of a tone.
     /// Each tone is divided into five bases.
     /// </summary>
-    public Base Base { get; init; }
+    public SharpAstrology.Enums.Base Base { get; init; }
 
 		/// <summary>
 		/// Gets the longitude of the activation.
 		/// </summary>
     public double Longitude { get; init; }
 
-		/// <summary>
-		/// Gets the color percentage of the activation.
-		/// </summary>
-		public double ColorPercentage { get; init; }
+    /// <summary>
+    /// Gets the color percentage of the activation.
+    /// </summary>
+    public double ColorPercentage { get; init; }
 
-		/// <summary>
-		/// Gets the tone percentage of the activation.
-		/// </summary>
-		public double TonePercentage { get; init; }
+	/// <summary>
+	/// Gets the tone percentage of the activation.
+	/// </summary>
+	public double TonePercentage { get; init; }
 
-		/// <summary>
-		/// Gets the base percentage of the activation.
-		/// </summary>
-		public double BasePercentage { get; init; }
+	/// <summary>
+	/// Gets the base percentage of the activation.
+	/// </summary>
+	public double BasePercentage { get; init; }
 
-		public override String ToString() => $"{Gate.ToNumber()}.{Line.ToNumber()}.{Color.ToNumber()}.{Tone.ToNumber()}.{Base.ToNumber()} C{Math.Round(ColorPercentage)}% T{Math.Round(TonePercentage)}% B{Math.Round(BasePercentage)}%";
+	public override String ToString() => $"{Gate.ToNumber()}.{Line.ToNumber()}.{Color.ToNumber()}.{Tone.ToNumber()}.{Base.ToNumber()} C{Math.Round(ColorPercentage)}% T{Math.Round(TonePercentage)}% B{Math.Round(BasePercentage)}%";
 }

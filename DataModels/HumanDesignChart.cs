@@ -23,7 +23,6 @@ public sealed class HumanDesignChart : IHumanDesignChart, IEquatable<HumanDesign
     /// </summary>
     public Dictionary<Planets, Activation> PersonalityActivation { get; }
 
-    private Dictionary<Planets, PlanetaryFixation>? _personalityFixation;
     /// <summary>
     /// Gets a dictionary of planetary fixing states for each personality planet.
     /// The value will be calculated on the first call of this property.
@@ -32,8 +31,8 @@ public sealed class HumanDesignChart : IHumanDesignChart, IEquatable<HumanDesign
     {
         get
         {
-            _personalityFixation ??= _planetaryFixations(PersonalityActivation, DesignActivation);
-            return _personalityFixation;
+            field ??= _planetaryFixations(PersonalityActivation, DesignActivation);
+            return field;
         }
     }
 
@@ -42,7 +41,6 @@ public sealed class HumanDesignChart : IHumanDesignChart, IEquatable<HumanDesign
     /// </summary>
     public Dictionary<Planets, Activation> DesignActivation { get; }
 
-    private Dictionary<Planets, PlanetaryFixation>? _designFixation;
     /// <summary>
     /// Gets a dictionary of planetary fixing states for each design planet.
     /// The value will be calculated on the first call of this property.
@@ -51,18 +49,17 @@ public sealed class HumanDesignChart : IHumanDesignChart, IEquatable<HumanDesign
     {
         get
         {
-            _designFixation ??= _planetaryFixations(DesignActivation, PersonalityActivation);
-            return _designFixation;
+            field ??= _planetaryFixations(DesignActivation, PersonalityActivation);
+            return field;
         }
     }
 
-    private Dictionary<Centers, ActivationTypes>? _centerActivations;
     public Dictionary<Centers, ActivationTypes> CenterActivations
     {
         get
         {
-            _centerActivations ??= HumanDesignUtility.CenterActivations(ConnectedComponents, ChannelActivations);
-            return _centerActivations;
+            field ??= HumanDesignUtility.CenterActivations(ConnectedComponents, ChannelActivations);
+            return field;
         }
     }
 
@@ -85,13 +82,12 @@ public sealed class HumanDesignChart : IHumanDesignChart, IEquatable<HumanDesign
         }
     }
     
-    private Dictionary<Gates, ActivationTypes>? _gateActivations;
     public Dictionary<Gates, ActivationTypes> GateActivations
     {
         get
         {
-            _gateActivations ??= HumanDesignUtility.GateActivations(_personalityGates, _designGates);
-            return _gateActivations;
+            field ??= HumanDesignUtility.GateActivations(_personalityGates, _designGates);
+            return field;
         }
     }
 
@@ -119,21 +115,20 @@ public sealed class HumanDesignChart : IHumanDesignChart, IEquatable<HumanDesign
         }
     }
 
-    private Strategies? _strategy;
+    private Authorities? _authority;
     /// <summary>
     /// Gets the strategy associated with this chart.
     /// The value will be calculated on the first call of this property.
     /// </summary>
-    public Strategies Strategy
+    public Authorities Authority
     {
         get
         {
-            _strategy ??= _Strategy();
-            return _strategy!.Value;
+            _authority ??= _Authority();
+            return _authority!.Value;
         }
     }
 
-    private HashSet<Gates>? _activeGates;
     /// <summary>
     /// Gets the set of active gates of the chart.
     /// The value will be calculated on the first call of this property.
@@ -142,12 +137,11 @@ public sealed class HumanDesignChart : IHumanDesignChart, IEquatable<HumanDesign
     {
         get
         {
-            _activeGates ??= _ActiveGates();
-            return _activeGates;
+            field ??= _ActiveGates();
+            return field;
         }
     }
     
-    private HashSet<Channels>? _activeChannels;
     /// <summary>
     /// Gets the set of active channels of the chart.
     /// The value will be calculated on the first call of this property.
@@ -156,8 +150,8 @@ public sealed class HumanDesignChart : IHumanDesignChart, IEquatable<HumanDesign
     {
         get
         {
-            _activeChannels ??= _ActiveChannels();
-            return _activeChannels;
+            field ??= _ActiveChannels();
+            return field;
         }
     }
 
@@ -175,7 +169,6 @@ public sealed class HumanDesignChart : IHumanDesignChart, IEquatable<HumanDesign
         }
     }
     
-    private Variables? _variables;
     /// <summary>
     /// Gets the variables associated with this chart.
     /// The value will be calculated on the first call of this property.
@@ -184,8 +177,8 @@ public sealed class HumanDesignChart : IHumanDesignChart, IEquatable<HumanDesign
     {
         get
         {
-            _variables ??= _Variables();
-            return _variables;
+            field ??= _Variables();
+            return field;
         }
     }
 
@@ -197,27 +190,29 @@ public sealed class HumanDesignChart : IHumanDesignChart, IEquatable<HumanDesign
     /// Initializes a new instance of the <see cref="HumanDesignChart"/> class. It calculates the design date itself.
     /// </summary>
     /// <param name="dateOfBirth">The date of birth for which the Human Design Chart is being created.</param>
-    /// <param name="eph">The ephemerides used for planetary positions calculations.</param>
+    /// <param name="eph">The planet position provider used for planetary positions calculations.</param>
     /// <param name="mode">Tropical or sidereal calculation mode. Default is tropical.</param>
     /// <exception cref="ArgumentException">Thrown if dateOfBirth is not in UTC.</exception>
-    public HumanDesignChart(DateTime dateOfBirth, IEphemerides eph, EphCalculationMode mode = EphCalculationMode.Tropic) 
-        : this(dateOfBirth, eph.DesignJulianDay(dateOfBirth, mode), eph, mode) { }
-    
+    public HumanDesignChart(DateTime dateOfBirth, IPlanetPositionProvider eph, EphCalculationMode mode = EphCalculationMode.Tropic)
+        : this(dateOfBirth, eph.DesignJulianDay(dateOfBirth), eph, mode) { }
+
     /// <summary>
     /// Initializes a new instance of the <see cref="HumanDesignChart"/> class.
     /// </summary>
     /// <param name="dateOfBirth">The date of birth for which the Human Design Chart is being created.</param>
     /// <param name="designDate">The corresponding design date.</param>
-    /// <param name="eph">The ephemerides used for planetary positions calculations.</param>
+    /// <param name="eph">The planet position provider used for planetary positions calculations.</param>
     /// <param name="mode">Tropical or sidereal calculation mode. Default is tropical.</param>
     /// <exception cref="ArgumentException">Thrown if dateOfBirth or designDate parameters are not in UTC.</exception>
-    public HumanDesignChart(DateTime dateOfBirth, DateTime designDate, IEphemerides eph, EphCalculationMode mode = EphCalculationMode.Tropic)
+    public HumanDesignChart(DateTime dateOfBirth, DateTime designDate, IPlanetPositionProvider eph, EphCalculationMode mode = EphCalculationMode.Tropic)
     {
+        if (dateOfBirth.Kind != DateTimeKind.Utc) throw new ArgumentException("The given birthdate is not in UTC");
+        if (designDate.Kind != DateTimeKind.Utc) throw new ArgumentException("The given design date is not in UTC");
         PersonalityActivation = _PlanetActivations(eph, dateOfBirth, mode);
         DesignActivation = _PlanetActivations(eph, designDate, mode);
         _personalityGates = PersonalityActivation.Values.Select(x => x.Gate).ToHashSet();
         _designGates = DesignActivation.Values.Select(x => x.Gate).ToHashSet();
-        (ConnectedComponents, Splits) = GraphService.ConnectedCenters(HumanDesignUtility.ActiveChannels(ActiveGates));
+        (ConnectedComponents, Splits) = GraphService.ConnectedCenters(HumanDesignUtility.ActiveChannels(ActiveGates!));
     }
     
     #endregion
@@ -266,15 +261,15 @@ public sealed class HumanDesignChart : IHumanDesignChart, IEquatable<HumanDesign
     /// </summary>
     /// <param name="start">The starting DateTime in UTC to begin predictions.</param>
     /// <param name="end">The ending DateTime in UTC for the range of predictions.</param>
-    /// <param name="eph">An IEphemerides instance providing ephemeris data for astrological calculations.</param>
+    /// <param name="eph">An IPlanetPositionProvider instance providing planetary positions for astrological calculations.</param>
     /// <param name="mode">An optional EphCalculationMode (defaults to Tropic) specifying the astrological calculation mode.</param>
     /// <returns>A List of tuples, each containing a <see cref="HumanDesignChart"/> and its associated probability, representing the predicted outcomes within the specified time range.</returns>
     /// <exception cref="ArgumentException">Thrown if start or end DateTime parameters are not in UTC, or if end is not strictly after start.</exception>
     public static List<(HumanDesignChart Chart, double Probability)>
-        Guess(DateTime start, DateTime end, IEphemerides eph, EphCalculationMode mode = EphCalculationMode.Tropic)
+        Guess(DateTime start, DateTime end, IPlanetPositionProvider eph, EphCalculationMode mode = EphCalculationMode.Tropic)
     {
         if (start.Kind != DateTimeKind.Utc || end.Kind != DateTimeKind.Utc)
-            throw new ArgumentException("The parameters must be of kind Utc.");
+            throw new ArgumentException("The datetime parameters must be of kind Utc.");
         if (end <= start)
             throw new ArgumentException("end must be strictly after start.", nameof(end));
 
@@ -286,7 +281,7 @@ public sealed class HumanDesignChart : IHumanDesignChart, IEquatable<HumanDesign
             (int)Math.Ceiling(Math.Log2((end - start).TotalMinutes / 10.0)),
             0, maxAllowedDepth);
 
-        var leaves = new List<(HumanDesignChart Chart, double Probability)>(1 << maxDepth);
+        var leaves = new List<(HumanDesignChart Chart, double Probability)>(1 << maxDepth); // == 2^maxDepth
         _guess(leaves, null, null, start, end, 0, maxDepth, eph, mode);
 
         var aggregated = new List<(HumanDesignChart Chart, double Probability)>();
@@ -315,14 +310,14 @@ public sealed class HumanDesignChart : IHumanDesignChart, IEquatable<HumanDesign
         HumanDesignChart? leftChart,
         HumanDesignChart? rightChart,
         DateTime start, DateTime end,
-        int currentDepth, int maxDepth, IEphemerides eph, EphCalculationMode mode = EphCalculationMode.Tropic)
+        int currentDepth, int maxDepth, IPlanetPositionProvider eph, EphCalculationMode mode = EphCalculationMode.Tropic)
     {
         leftChart ??= new HumanDesignChart(start, eph, mode);
         rightChart ??= new HumanDesignChart(end, eph, mode);
-        if (currentDepth > maxDepth || leftChart.Equals(rightChart))
+        if (currentDepth >= maxDepth || leftChart.Equals(rightChart))
         {
             results.Add((leftChart, 1.0 / Math.Pow(2, currentDepth)));
-            return; 
+            return;
         }
         
         var midPoint = start + (end - start) / 2;
@@ -400,20 +395,30 @@ public sealed class HumanDesignChart : IHumanDesignChart, IEquatable<HumanDesign
         return Types.Generator;
     }
     
-    private Strategies _Strategy()
+    private Authorities _Authority()
     {
-        if (ConnectedComponents.ContainsKey(Centers.Emotions)) return Strategies.Emotional;
-        if (ConnectedComponents.ContainsKey(Centers.Sacral)) return Strategies.Sacral;
-        if (ConnectedComponents.ContainsKey(Centers.Spleen)) return Strategies.Spleen;
+        if (ConnectedComponents.ContainsKey(Centers.Emotions)) return Authorities.Emotional;
+        if (ConnectedComponents.ContainsKey(Centers.Sacral))   return Authorities.Sacral;
+        if (ConnectedComponents.ContainsKey(Centers.Spleen))   return Authorities.Splenic;
+
         if (ConnectedComponents.ContainsKey(Centers.Heart))
         {
-            if (ConnectedComponents.ContainsKey(Centers.Throat))
+            return Type switch
             {
-                return ConnectedComponents[Centers.Heart] == ConnectedComponents[Centers.Throat] ? Strategies.Heart : Strategies.Self;
-            }
+                Types.Manifestor => Authorities.EgoManifested,
+                Types.Projector => Authorities.EgoProjected,
+                _ => throw new InvalidOperationException($"Unexpected type {Type} for Heart authority.")
+            };
         }
 
-        return ConnectedComponents.ContainsKey(Centers.Self) ? Strategies.Self : Strategies.Outer;
+        if (ConnectedComponents.TryGetValue(Centers.Self, out var selfComp) &&
+            ConnectedComponents.TryGetValue(Centers.Throat, out var throatComp) &&
+            selfComp == throatComp)
+        {
+            return Authorities.SelfProjected;
+        }
+
+        return Type == Types.Reflector ? Authorities.Lunar : Authorities.Mental;
     }
     
     private Variables _Variables()
@@ -461,7 +466,7 @@ public sealed class HumanDesignChart : IHumanDesignChart, IEquatable<HumanDesign
             .ToIncarnationCross();
     }
     
-    private Dictionary<Planets, Activation> _PlanetActivations(IEphemerides eph, DateTime date, EphCalculationMode mode = EphCalculationMode.Tropic)
+    private Dictionary<Planets, Activation> _PlanetActivations(IPlanetPositionProvider eph, DateTime date, EphCalculationMode mode = EphCalculationMode.Tropic)
     {
         var result = new Dictionary<Planets, Activation>();
         foreach (var p in Definitions.HumanDesignDefaults.HumanDesignPlanets)

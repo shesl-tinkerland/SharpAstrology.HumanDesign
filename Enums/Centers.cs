@@ -27,7 +27,8 @@ public static class CentersExtensionMethods
             Centers.Self => [Gates.Key1, Gates.Key13, Gates.Key25, Gates.Key46, Gates.Key2, Gates.Key15, Gates.Key10, Gates.Key7],
             Centers.Throat => [Gates.Key20, Gates.Key16, Gates.Key62, Gates.Key23, Gates.Key56, Gates.Key35, Gates.Key12, Gates.Key45, Gates.Key33, Gates.Key8, Gates.Key31],
             Centers.Mind => [Gates.Key43, Gates.Key17, Gates.Key47, Gates.Key24, Gates.Key4, Gates.Key11],
-            Centers.Crown => [Gates.Key64, Gates.Key61, Gates.Key63]
+            Centers.Crown => [Gates.Key64, Gates.Key61, Gates.Key63],
+            _ => throw new NotImplementedException($"ToGates() not implemented for {center}.")
         };
     }
 
@@ -43,8 +44,8 @@ public static class CentersExtensionMethods
             Centers.Sacral =>
             [
                 Channels.Key5Key15, Channels.Key2Key14, Channels.Key29Key46, Channels.Key6Key59,
-                Channels.Key9Key52, Channels.Key3Key60, Channels.Key42Key53, Channels.Key27Key50,
-                Channels.Key34Key57
+                Channels.Key9Key52, Channels.Key10Key34, Channels.Key3Key60, Channels.Key42Key53, Channels.Key27Key50,
+                Channels.Key34Key57, Channels.Key20Key34
             ],
             Centers.Spleen =>
             [
@@ -63,7 +64,7 @@ public static class CentersExtensionMethods
             Centers.Self =>
             [
                 Channels.Key1Key8, Channels.Key13Key33, Channels.Key25Key51, Channels.Key29Key46, Channels.Key2Key14,
-                Channels.Key5Key15, Channels.Key10Key20, Channels.Key7Key31
+                Channels.Key5Key15, Channels.Key10Key20, Channels.Key10Key34, Channels.Key10Key57, Channels.Key7Key31
             ],
             Centers.Throat =>
             [
@@ -79,7 +80,8 @@ public static class CentersExtensionMethods
             Centers.Crown =>
             [
                 Channels.Key47Key64, Channels.Key24Key61, Channels.Key4Key63
-            ]
+            ],
+            _ => throw new NotImplementedException($"ConnectedChannels() not implemented for {center}.")
         };
     }
 }

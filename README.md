@@ -5,15 +5,15 @@
 This package is part of the SharpAstrology project. It provides all the tools to calculate the common Human Design Body Graph.
 
 ## SharpAstrology Packages
-| Package                                                                                                                |     Version     | Description                                   | Licence  |
-|:-----------------------------------------------------------------------------------------------------------------------|:---------------:|:----------------------------------------------|:--------:|
-| [SharpAstrology.Base](https://github.com/CReizner/SharpAstrology.Base)                                                 |     0.10.0      | Base library                                  |   MIT    |
-| [SharpAstrology.SwissEph](https://github.com/CReizner/SharpAstrology.SwissEph)                                         |      0.2.2      | Ephemerides package based on SwissEphNet      | AGPL-3.0 |
-| [SharpAstrology.HumanDesign](https://github.com/CReizner/SharpAstrology.HumanDesign)                                   |      1.1.2      | Extensions for the Human Design system        |   MIT    |
-| [SharpAstrology.HumanDesign.BlazorComponents](https://github.com/CReizner/SharpAstrology.HumanDesign.BlazorComponents) |      0.2.1      | Human Design charts as Blazor components      |   MIT    |
-| [SharpAstrology.Vedic](https://github.com/CReizner/SharpAstrology.Vedic)                                               |      0.1.0      | Extensions for Vedic astrology systems        |   MIT    |
-| [SharpAstrology.West](https://github.com/CReizner/SharpAstrology.West)                                                 | 0.1.0-preview.4 | Extensions for western astrology systems      |   MIT    |
-| [SharpAstrology.West.BlazorComponents](https://github.com/CReizner/SharpAstrology.West.BlazorComponents)               | 0.1.0-preview.1 | Western astrology charts as Blazor components |   MIT    |
+| Package                                                                                                                | Description                                   | Licence  |
+|:-----------------------------------------------------------------------------------------------------------------------|:---------------|:--------:|
+| [SharpAstrology.Base](https://github.com/CReizner/SharpAstrology.Base)                                                 | Base library                                  |   MIT    |
+| [SharpAstrology.SwissEph](https://github.com/CReizner/SharpAstrology.SwissEph)                                         | Ephemerides package based on SwissEphNet      | AGPL-3.0 |
+| [SharpAstrology.HumanDesign](https://github.com/CReizner/SharpAstrology.HumanDesign)                                   | Extensions for the Human Design system        |   MIT    |
+| [SharpAstrology.HumanDesign.BlazorComponents](https://github.com/CReizner/SharpAstrology.HumanDesign.BlazorComponents) | Human Design charts as Blazor components      |   MIT    |
+| [SharpAstrology.Vedic](https://github.com/CReizner/SharpAstrology.Vedic)                                               | Extensions for Vedic astrology systems        |   MIT    |
+| [SharpAstrology.West](https://github.com/CReizner/SharpAstrology.West)                                                 | Extensions for western astrology systems      |   MIT    |
+| [SharpAstrology.West.BlazorComponents](https://github.com/CReizner/SharpAstrology.West.BlazorComponents)               | Western astrology charts as Blazor components |   MIT    |
 
 ## With this package you can calculate:
 - Human Design charts with:
@@ -22,7 +22,7 @@ This package is part of the SharpAstrology project. It provides all the tools to
   - incarnation cross
   - split definition
   - channel and gate activations
-  - strategy
+  - authority
   - variables
 - Transit charts
 - Composite charts
@@ -71,8 +71,8 @@ Console.WriteLine($"Type: {chart.Type}");
 // Type: Generator
 Console.WriteLine($"Profile: {chart.Profile.ToText()}");
 // Profile: 1 / 3
-Console.WriteLine($"Strategy: {chart.Strategy}");
-// Strategy: Emotional
+Console.WriteLine($"Authority: {chart.Authority.ToText()}");
+// Authority: Emotional (Solar Plexus)
 Console.WriteLine($"Split definition: {chart.SplitDefinition.ToText()}");
 // Split definition: Split
 Console.WriteLine($"Incarnation Cross: {chart.IncarnationCross.ToText()}");
@@ -89,13 +89,13 @@ foreach (var channel in chart.ActiveChannels)
 Console.WriteLine("\nActive Personality Gates:");
 foreach (var (planet, activation) in chart.PersonalityActivation)
 {
-    Console.WriteLine($"\t{planet} {activation.Gate}-{activation.Line}-{activation.FixingState}");
+    Console.WriteLine($"\t{planet} {activation.Gate}-{activation.Line}-{chart.PersonalityFixation[planet].FixingState}");
 }
 
 Console.WriteLine("\nActive Design Gates:");
 foreach (var (planet, activation) in chart.DesignActivation)
 {
-    Console.WriteLine($"\t{planet} {activation.Gate}-{activation.Line}-{activation.FixingState}");
+    Console.WriteLine($"\t{planet} {activation.Gate}-{activation.Line}-{chart.DesignFixation[planet].FixingState}");
 }
 
 Console.WriteLine("\nVariables:");
@@ -131,7 +131,7 @@ Parallel.Invoke(
 
 ### If you don't know the exact time of birth
 
-You can specify a time range and see which different charts appear in this period. Different means that the charts differ in at least one active gate or in the line of the sun.
+You can specify a time range and see which different charts appear in this period. Two charts are considered different if at least one Human Design planet (personality or design) activates a different gate, or if the Sun line differs on either side — i.e. their body graph or profile differs.
 
 ```C#
 using SharpAstrology.DataModels;

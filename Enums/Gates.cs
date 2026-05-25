@@ -137,7 +137,8 @@ public static class GatesExtensionMethods
             Gates.Key61 => Centers.Crown,
             Gates.Key62 => Centers.Throat,
             Gates.Key63 => Centers.Crown,
-            Gates.Key64 => Centers.Crown
+            Gates.Key64 => Centers.Crown,
+            _ => throw new NotImplementedException($"GetCenter() not implemented for {key}.")
         };
 
     public static int ToNumber(this Gates key) => key switch
@@ -205,7 +206,8 @@ public static class GatesExtensionMethods
             Gates.Key61 => 61,
             Gates.Key62 => 62,
             Gates.Key63 => 63,
-            Gates.Key64 => 64
+            Gates.Key64 => 64,
+            _ => throw new NotImplementedException($"ToNumber() not implemented for {key}.")
         };
 
     public static byte[] ToByte(this Gates key) => key switch
@@ -273,7 +275,8 @@ public static class GatesExtensionMethods
         Gates.Key61 => new byte[] {1, 1, 0, 0, 1, 1},
         Gates.Key62 => new byte[] {0, 0, 1, 1, 0, 0},
         Gates.Key63 => new byte[] {0, 1, 0, 1, 0, 1},
-        Gates.Key64 => new byte[] {1, 0, 1, 0, 1, 0}
+        Gates.Key64 => new byte[] {1, 0, 1, 0, 1, 0},
+        _ => throw new NotImplementedException($"ToByte() not implemented for {key}.")
     };
 
     public static Quarters ToQuarter(this Gates key) => key switch
@@ -342,6 +345,7 @@ public static class GatesExtensionMethods
         Gates.Key22 => Quarters.Initiation,
         Gates.Key36 => Quarters.Initiation,
         Gates.Key25 => Quarters.Initiation,
+        _ => throw new NotImplementedException($"ToQuarter() not implemented for {key}.")
     };
 
     public static Gates[] HarmonicGates(this Gates gate) => gate switch
@@ -409,6 +413,7 @@ public static class GatesExtensionMethods
         Gates.Key61 => [Gates.Key61, Gates.Key24],
         Gates.Key62 => [Gates.Key62, Gates.Key17],
         Gates.Key63 => [Gates.Key63, Gates.Key4],
-        Gates.Key64 => [Gates.Key64, Gates.Key47]
+        Gates.Key64 => [Gates.Key64, Gates.Key47],
+        _ => throw new NotImplementedException($"HarmonicGates() not implemented for {gate}.")
     };
 }

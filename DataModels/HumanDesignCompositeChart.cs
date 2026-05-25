@@ -16,7 +16,6 @@ public sealed class HumanDesignCompositeChart : IHumanDesignChart
     /// </summary>
     public Dictionary<Planets, Activation> P1PersonalityActivation { get; }
     
-    private Dictionary<Planets, PlanetaryFixation>? _p1PersonalityFixation;
     /// <summary>
     /// Gets a dictionary of planetary fixing states for each personality planet of person 1.
     /// The value will be calculated on the first call of this property.
@@ -25,8 +24,8 @@ public sealed class HumanDesignCompositeChart : IHumanDesignChart
     {
         get
         {
-            _p1PersonalityFixation ??= _planetaryFixations(P1PersonalityActivation, P1DesignActivation, P2PersonalityActivation, P2DesignActivation);
-            return _p1PersonalityFixation;
+            field ??= _planetaryFixations(P1PersonalityActivation, P1DesignActivation, P2PersonalityActivation, P2DesignActivation);
+            return field;
         }
     }
     
@@ -35,7 +34,6 @@ public sealed class HumanDesignCompositeChart : IHumanDesignChart
     /// </summary>
     public Dictionary<Planets, Activation> P1DesignActivation { get; }
     
-    private Dictionary<Planets, PlanetaryFixation>? _p1DesignFixation;
     /// <summary>
     /// Gets a dictionary of planetary fixing states for each personality planet of person 1.
     /// The value will be calculated on the first call of this property.
@@ -44,8 +42,8 @@ public sealed class HumanDesignCompositeChart : IHumanDesignChart
     {
         get
         {
-            _p1DesignFixation ??= _planetaryFixations(P1DesignActivation, P1PersonalityActivation, P2PersonalityActivation, P2DesignActivation);
-            return _p1DesignFixation;
+            field ??= _planetaryFixations(P1DesignActivation, P1PersonalityActivation, P2PersonalityActivation, P2DesignActivation);
+            return field;
         }
     }
     
@@ -54,7 +52,6 @@ public sealed class HumanDesignCompositeChart : IHumanDesignChart
     /// </summary>
     public Dictionary<Planets, Activation> P2PersonalityActivation { get; }
     
-    private Dictionary<Planets, PlanetaryFixation>? _p2PersonalityFixation;
     /// <summary>
     /// Gets a dictionary of planetary fixing states for each personality planet of person 2.
     /// The value will be calculated on the first call of this property.
@@ -63,8 +60,8 @@ public sealed class HumanDesignCompositeChart : IHumanDesignChart
     {
         get
         {
-            _p2PersonalityFixation ??= _planetaryFixations(P2PersonalityActivation, P2DesignActivation, P1PersonalityActivation, P1DesignActivation);
-            return _p2PersonalityFixation;
+            field ??= _planetaryFixations(P2PersonalityActivation, P2DesignActivation, P1PersonalityActivation, P1DesignActivation);
+            return field;
         }
     }
     
@@ -73,7 +70,6 @@ public sealed class HumanDesignCompositeChart : IHumanDesignChart
     /// </summary>
     public Dictionary<Planets, Activation> P2DesignActivation { get; }
     
-    private Dictionary<Planets, PlanetaryFixation>? _p2DesignFixation;
     /// <summary>
     /// Gets a dictionary of planetary fixing states for each personality planet of person 2.
     /// The value will be calculated on the first call of this property.
@@ -82,18 +78,17 @@ public sealed class HumanDesignCompositeChart : IHumanDesignChart
     {
         get
         {
-            _p2DesignFixation ??= _planetaryFixations(P2DesignActivation, P2PersonalityActivation, P1PersonalityActivation, P1DesignActivation);
-            return _p2DesignFixation;
+            field ??= _planetaryFixations(P2DesignActivation, P2PersonalityActivation, P1PersonalityActivation, P1DesignActivation);
+            return field;
         }
     }
 
-    private Dictionary<Centers, ActivationTypes>? _centerActivations;
     public Dictionary<Centers, ActivationTypes> CenterActivations
     {
         get
         {
-            _centerActivations ??= HumanDesignUtility.CenterActivations(ConnectedComponents, ChannelActivations);
-            return _centerActivations;
+            field ??= HumanDesignUtility.CenterActivations(ConnectedComponents, ChannelActivations);
+            return field;
         }
     }
 
@@ -114,23 +109,21 @@ public sealed class HumanDesignCompositeChart : IHumanDesignChart
     /// </summary>
     public HashSet<Gates> ActiveGates { get; }
     
-    private Dictionary<Gates, ActivationTypes>? _gateActivations;
     public Dictionary<Gates, ActivationTypes> GateActivations
     {
         get
         {
-            _gateActivations ??= HumanDesignUtility.GateActivations(_p1ActiveGates, _p2ActiveGates);
-            return _gateActivations;
+            field ??= HumanDesignUtility.GateActivations(_p1ActiveGates, _p2ActiveGates);
+            return field;
         }
     }
     
-    private Dictionary<Channels, ChannelActivationType>? _channelActivation;
     public Dictionary<Channels, ChannelActivationType> ChannelActivations
     {
         get
         {
-            _channelActivation ??= HumanDesignUtility.CompositeChannelActivations(_p1ActiveGates, _p2ActiveGates);
-            return _channelActivation;
+            field ??= HumanDesignUtility.CompositeChannelActivations(_p1ActiveGates, _p2ActiveGates);
+            return field;
         }
     }
     
@@ -149,7 +142,11 @@ public sealed class HumanDesignCompositeChart : IHumanDesignChart
             Line = x.Value.Line,
             Color = x.Value.Color,
             Tone = x.Value.Tone,
-            Base = x.Value.Base
+            Base = x.Value.Base,
+            ColorPercentage = x.Value.ColorPercentage,
+            TonePercentage = x.Value.TonePercentage,
+            BasePercentage = x.Value.BasePercentage,
+            Longitude = x.Value.Longitude
         });
         P1DesignActivation = person1.DesignActivation.ToDictionary(x=>x.Key, x=>new Activation
         {
@@ -157,7 +154,11 @@ public sealed class HumanDesignCompositeChart : IHumanDesignChart
             Line = x.Value.Line,
             Color = x.Value.Color,
             Tone = x.Value.Tone,
-            Base = x.Value.Base
+            Base = x.Value.Base,
+            ColorPercentage = x.Value.ColorPercentage,
+            TonePercentage = x.Value.TonePercentage,
+            BasePercentage = x.Value.BasePercentage,
+            Longitude = x.Value.Longitude
         });
         P2PersonalityActivation = person2.PersonalityActivation.ToDictionary(x=>x.Key, x=>new Activation
         {
@@ -165,7 +166,11 @@ public sealed class HumanDesignCompositeChart : IHumanDesignChart
             Line = x.Value.Line,
             Color = x.Value.Color,
             Tone = x.Value.Tone,
-            Base = x.Value.Base
+            Base = x.Value.Base,
+            ColorPercentage = x.Value.ColorPercentage,
+            TonePercentage = x.Value.TonePercentage,
+            BasePercentage = x.Value.BasePercentage,
+            Longitude = x.Value.Longitude
         });
         P2DesignActivation = person2.DesignActivation.ToDictionary(x=>x.Key, x=>new Activation
         {
@@ -173,7 +178,11 @@ public sealed class HumanDesignCompositeChart : IHumanDesignChart
             Line = x.Value.Line,
             Color = x.Value.Color,
             Tone = x.Value.Tone,
-            Base = x.Value.Base
+            Base = x.Value.Base,
+            ColorPercentage = x.Value.ColorPercentage,
+            TonePercentage = x.Value.TonePercentage,
+            BasePercentage = x.Value.BasePercentage,
+            Longitude = x.Value.Longitude
         });
 
         _p1ActiveGates = person1.ActiveGates;
@@ -188,28 +197,30 @@ public sealed class HumanDesignCompositeChart : IHumanDesignChart
     /// <summary>
     /// Initializes a new instance of the <see cref="HumanDesignCompositeChart"/> class using the birthdates of two individuals.
     /// </summary>
-    /// <param name="p1dateOfBirth">The date of birth of the first person.</param>
-    /// <param name="p2dateOfBirth">The date of birth of the second person.</param>
-    /// <param name="eph">The ephemerides service used to calculate planetary positions.</param>
+    /// <param name="p1DateOfBirth">The date of birth of the first person.</param>
+    /// <param name="p2DateOfBirth">The date of birth of the second person.</param>
+    /// <param name="eph">The planet position provider used to calculate planetary positions.</param>
     /// <param name="mode">The calculation mode, defaulting to Tropic.</param>
-    public HumanDesignCompositeChart(DateTime p1dateOfBirth, DateTime p2dateOfBirth, IEphemerides eph, EphCalculationMode mode = EphCalculationMode.Tropic)
+    public HumanDesignCompositeChart(DateTime p1DateOfBirth, DateTime p2DateOfBirth, IPlanetPositionProvider eph, EphCalculationMode mode = EphCalculationMode.Tropic)
     {
-        var p1designDate = eph.DesignJulianDay(p1dateOfBirth, mode);
-        var p2designDate = eph.DesignJulianDay(p2dateOfBirth, mode);
+        if (p1DateOfBirth.Kind != DateTimeKind.Utc) throw new ArgumentException("The given birthdate 'p1DateOfBirth' is not in UTC");
+        if (p2DateOfBirth.Kind != DateTimeKind.Utc) throw new ArgumentException("The given birthdate 'p2DateOfBirth' is not in UTC");
+        var p1DesignDate = eph.DesignJulianDay(p1DateOfBirth);
+        var p2DesignDate = eph.DesignJulianDay(p2DateOfBirth);
         
         P1PersonalityActivation = Definitions.HumanDesignDefaults.HumanDesignPlanets.ToDictionary(
             p => p,
-            p => HumanDesignUtility.ActivationOf(eph.PlanetsPosition(p, p1dateOfBirth, mode).Longitude));
+            p => HumanDesignUtility.ActivationOf(eph.PlanetsPosition(p, p1DateOfBirth, mode).Longitude));
         P1DesignActivation = Definitions.HumanDesignDefaults.HumanDesignPlanets.ToDictionary(
             p => p,
-            p => HumanDesignUtility.ActivationOf(eph.PlanetsPosition(p, p1designDate, mode).Longitude));
+            p => HumanDesignUtility.ActivationOf(eph.PlanetsPosition(p, p1DesignDate, mode).Longitude));
         
         P2PersonalityActivation = Definitions.HumanDesignDefaults.HumanDesignPlanets.ToDictionary(
             p => p,
-            p => HumanDesignUtility.ActivationOf(eph.PlanetsPosition(p, p2dateOfBirth, mode).Longitude));
+            p => HumanDesignUtility.ActivationOf(eph.PlanetsPosition(p, p2DateOfBirth, mode).Longitude));
         P2DesignActivation = Definitions.HumanDesignDefaults.HumanDesignPlanets.ToDictionary(
             p => p,
-            p => HumanDesignUtility.ActivationOf(eph.PlanetsPosition(p, p2designDate, mode).Longitude));
+            p => HumanDesignUtility.ActivationOf(eph.PlanetsPosition(p, p2DesignDate, mode).Longitude));
         
         _p1ActiveGates = P1PersonalityActivation.Select(pair => pair.Value.Gate).ToHashSet();
         _p1ActiveGates.UnionWith(P1DesignActivation.Select(pair => pair.Value.Gate).ToHashSet());

@@ -17,6 +17,7 @@ public static class BaseExtensionMethods
         Base.Two => 2,
         Base.Three => 3,
         Base.Four => 4,
-        Base.Five => 5
+        Base.Five => 5,
+        _ => throw new NotImplementedException($"{b} not implemented for ToNumber()")
     };
 }

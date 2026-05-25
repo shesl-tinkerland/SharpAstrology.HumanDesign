@@ -56,8 +56,7 @@ public static class HumanDesignUtility
     /// <returns>An <see cref="DataModels.Activation"/> object containing the calculated values.</returns>
     public static Activation ActivationOf(double longitude)
     {
-        var x = longitude - HdOffsetToZodiac;
-        if (x < 0) x += 360;
+        var x = AstrologyUtility.NormalizeDegrees(longitude - HdOffsetToZodiac);
 						
         return new Activation()
         {
@@ -65,11 +64,11 @@ public static class HumanDesignUtility
             Line = (Lines)Math.Floor((x % DegreePerGate) / DegreePerLine) + 1,
             Color = (Color)Math.Floor((x % DegreePerLine) / DegreePerColor) + 1,
             Tone = (Tone)Math.Floor((x % DegreePerColor) / DegreePerTone) + 1,
-            Base = (Base)Math.Floor((x % DegreePerTone) / DegreePerBase) + 1,
-						ColorPercentage = ((x % DegreePerColor) / DegreePerColor) * 100.0,
-						TonePercentage = ((x % DegreePerTone) / DegreePerTone) * 100.0,
-						BasePercentage = ((x % DegreePerBase) / DegreePerBase) * 100.0,
-						Longitude = longitude,
+            Base = (SharpAstrology.Enums.Base)Math.Floor((x % DegreePerTone) / DegreePerBase) + 1,
+			ColorPercentage = ((x % DegreePerColor) / DegreePerColor) * 100.0,
+			TonePercentage = ((x % DegreePerTone) / DegreePerTone) * 100.0,
+			BasePercentage = ((x % DegreePerBase) / DegreePerBase) * 100.0,
+			Longitude = longitude,
         };
     }
     
@@ -1105,6 +1104,11 @@ public static class HumanDesignUtility
                 {
                     continue;
                 }
+                
+                if(activation == ChannelActivationType.None)
+                {
+                    continue;
+                }
 
                 if (activation == ChannelActivationType.FirstDominating)
                 {
@@ -1133,7 +1137,8 @@ public static class HumanDesignUtility
                 break;
             }
 
-            result[center] = activationType!.Value;
+            if (activationType is null) throw new UnreachableException();
+            result[center] = activationType.Value;
         }
 
         return result;

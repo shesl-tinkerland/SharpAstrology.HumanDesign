@@ -25,9 +25,17 @@
     <ItemGroup>
         <None Include="README.md" Pack="true" PackagePath="$(PackageReadmeFile)" CopyToOutputDirectory="Always"/>
     </ItemGroup>
+    
+    <PropertyGroup>
+        <SharpAstrologyBaseVersion>[0.12.0,)</SharpAstrologyBaseVersion>
+    </PropertyGroup>
 
-    <ItemGroup>
-      <PackageReference Include="SharpAstrology.Base" Version="[0.8.0,)" />
+    <ItemGroup Condition="Exists('..\SharpAstrology.Base\SharpAstrology.Base.csproj')">
+        <ProjectReference Include="..\SharpAstrology.Base\SharpAstrology.Base.csproj" />
+    </ItemGroup>
+
+    <ItemGroup Condition="!Exists('..\SharpAstrology.Base\SharpAstrology.Base.csproj')">
+        <PackageReference Include="SharpAstrology.Base" Version="$(SharpAstrologyBaseVersion)" />
     </ItemGroup>
     
 </Project>

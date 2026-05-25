@@ -19,5 +19,6 @@ public static class TypesExtensionMethods
         Types.Projector => "Projector",
         Types.Reflector => "Reflector",
         Types.ManifestingGenerator => "Manifesting Generator",
+        _ => throw new NotImplementedException($"ToText() not implemented for {type}.")
    };
 }

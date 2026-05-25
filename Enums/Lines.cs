@@ -39,6 +39,7 @@ public static class LinesExtensionMethods
         Lines.Three => 3,
         Lines.Four => 4,
         Lines.Five => 5,
-        Lines.Six => 6
+        Lines.Six => 6,
+        _ => throw new NotImplementedException($"ToNumber() not implemented for {line}.")
     };
 }

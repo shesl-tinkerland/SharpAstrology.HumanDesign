@@ -15,5 +15,5 @@ public sealed class Variable
     public Orientation Orientation { get; init; }
     public Color Color { get; init; }
     public Tone Tone{ get; init; }
-    public Base Base { get; init; }
+    public SharpAstrology.Enums.Base Base { get; init; }
 } 

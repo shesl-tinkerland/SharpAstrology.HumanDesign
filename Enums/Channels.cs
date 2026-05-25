@@ -82,10 +82,11 @@ public static class ChannelExtensionMethods
         Channels.Key37Key40 => (Gates.Key37, Gates.Key40),
         Channels.Key39Key55 => (Gates.Key39, Gates.Key55),
         Channels.Key42Key53 => (Gates.Key42, Gates.Key53),
-        Channels.Key47Key64 => (Gates.Key47, Gates.Key64)
+        Channels.Key47Key64 => (Gates.Key47, Gates.Key64),
+        _ => throw new NotImplementedException($"ToGates() not implemented for {channel}.")
     };
     
-    public static string ToText(this Channels hdChannel) => hdChannel switch
+    public static string ToText(this Channels channel) => channel switch
     {
         Channels.Key1Key8 => "Channel 1-8",
         Channels.Key2Key14 => "Channel 2-14",
@@ -122,7 +123,8 @@ public static class ChannelExtensionMethods
         Channels.Key37Key40 => "Channel 37-40",
         Channels.Key39Key55 => "Channel 39-55",
         Channels.Key42Key53 => "Channel 42-53",
-        Channels.Key47Key64 => "Channel 47-64"
+        Channels.Key47Key64 => "Channel 47-64",
+        _ => throw new NotImplementedException($"ToText() not implemented for {channel}.")
     };
 
     

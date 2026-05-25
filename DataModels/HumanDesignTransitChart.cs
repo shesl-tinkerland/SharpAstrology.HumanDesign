@@ -15,7 +15,6 @@ public sealed class HumanDesignTransitChart : IHumanDesignChart
     /// </summary>
     public Dictionary<Planets, Activation> PersonalityActivation { get; }
     
-    private Dictionary<Planets, PlanetaryFixation>? _personalityFixation;
     /// <summary>
     /// Gets a dictionary of planetary fixing states for each personality planet.
     /// The value will be calculated on the first call of this property.
@@ -24,8 +23,8 @@ public sealed class HumanDesignTransitChart : IHumanDesignChart
     {
         get
         {
-            _personalityFixation ??= _planetaryFixations(PersonalityActivation, DesignActivation, TransitActivation);
-            return _personalityFixation;
+            field ??= _planetaryFixations(PersonalityActivation, DesignActivation, TransitActivation);
+            return field;
         }
     }
     
@@ -34,7 +33,6 @@ public sealed class HumanDesignTransitChart : IHumanDesignChart
     /// </summary>
     public Dictionary<Planets, Activation> DesignActivation { get; }
     
-    private Dictionary<Planets, PlanetaryFixation>? _designFixation;
     /// <summary>
     /// Gets a dictionary of planetary fixing states for each design planet.
     /// The value will be calculated on the first call of this property.
@@ -43,8 +41,8 @@ public sealed class HumanDesignTransitChart : IHumanDesignChart
     {
         get
         {
-            _designFixation ??= _planetaryFixations(DesignActivation, PersonalityActivation, TransitActivation);
-            return _designFixation;
+            field ??= _planetaryFixations(DesignActivation, PersonalityActivation, TransitActivation);
+            return field;
         }
     }
     
@@ -53,7 +51,6 @@ public sealed class HumanDesignTransitChart : IHumanDesignChart
     /// </summary>
     public Dictionary<Planets, Activation> TransitActivation { get; }
     
-    private Dictionary<Planets, PlanetaryFixation>? _transitFixation;
     /// <summary>
     /// Gets a dictionary of planetary fixing states for each transit planet.
     /// The value will be calculated on the first call of this property.
@@ -62,18 +59,17 @@ public sealed class HumanDesignTransitChart : IHumanDesignChart
     {
         get
         {
-            _transitFixation ??= _planetaryFixations(TransitActivation, PersonalityActivation, DesignActivation, true);
-            return _transitFixation;
+            field ??= _planetaryFixations(TransitActivation, PersonalityActivation, DesignActivation, true);
+            return field;
         }
     }
 
-    private Dictionary<Centers, ActivationTypes>? _centerActivations;
     public Dictionary<Centers, ActivationTypes> CenterActivations
     {
         get
         {
-            _centerActivations ??= HumanDesignUtility.CenterActivations(ConnectedComponents, ChannelActivations);
-            return _centerActivations;
+            field ??= HumanDesignUtility.CenterActivations(ConnectedComponents, ChannelActivations);
+            return field;
         }
     }
 
@@ -93,35 +89,33 @@ public sealed class HumanDesignTransitChart : IHumanDesignChart
     /// Gets the set of active gates of the composite chart.
     /// </summary>
     public HashSet<Gates> ActiveGates { get; }
-
-    private Dictionary<Gates, ActivationTypes>? _gateActivations;
-
+    
     public Dictionary<Gates, ActivationTypes> GateActivations
     {
         get
         {
-            _gateActivations ??= HumanDesignUtility.GateActivations(_personActiveGates, _transitActiveGates);
-            return _gateActivations;
+            field ??= HumanDesignUtility.GateActivations(_personActiveGates, _transitActiveGates);
+            return field;
         }
     }
 
-    private Dictionary<Channels, ChannelActivationType>? _channelActivations;
     public Dictionary<Channels, ChannelActivationType> ChannelActivations
     {
         get
         {
-            _channelActivations ??= HumanDesignUtility.CompositeChannelActivations(_personActiveGates, _transitActiveGates);
-            return _channelActivations;
+            field ??= HumanDesignUtility.CompositeChannelActivations(_personActiveGates, _transitActiveGates);
+            return field;
         }
     }
     
     #region Constructor
     
-    public HumanDesignTransitChart(DateTime birthDate, DateTime transitDate, IEphemerides eph, EphCalculationMode mode = EphCalculationMode.Tropic)
+    public HumanDesignTransitChart(DateTime birthDate, DateTime transitDate, IPlanetPositionProvider eph, EphCalculationMode mode = EphCalculationMode.Tropic)
         : this(new HumanDesignChart(birthDate, eph, mode), transitDate, eph, mode) { }
-    
-    public HumanDesignTransitChart(HumanDesignChart person, DateTime transitDate, IEphemerides eph, EphCalculationMode mode = EphCalculationMode.Tropic)
+
+    public HumanDesignTransitChart(HumanDesignChart person, DateTime transitDate, IPlanetPositionProvider eph, EphCalculationMode mode = EphCalculationMode.Tropic)
     {
+        if (transitDate.Kind != DateTimeKind.Utc) throw new ArgumentException("The given transit date is not in UTC");
         PersonalityActivation = person.PersonalityActivation.ToDictionary();
         DesignActivation = person.DesignActivation.ToDictionary();
         TransitActivation = Definitions.HumanDesignDefaults.HumanDesignPlanets.ToDictionary(

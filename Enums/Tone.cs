@@ -23,6 +23,7 @@ public static class ToneExtensionMethods
         Tone.Three => Orientation.Left,
         Tone.Four => Orientation.Right,
         Tone.Five => Orientation.Right,
-        Tone.Six => Orientation.Right
+        Tone.Six => Orientation.Right,
+        _ => throw new NotImplementedException($"ToOrientation() not implemented for {line}.")
     };
 }

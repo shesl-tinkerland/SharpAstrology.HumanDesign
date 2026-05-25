@@ -21,5 +21,6 @@ public static class HdSplitDefinitionExtensionMethods
         SplitDefinitions.SplitDefinition => "Split",
         SplitDefinitions.TripleSplit => "Triple Split",
         SplitDefinitions.QuadrupleSplit => "Quadruple Split",
+        _ => throw new NotImplementedException($"ToText() not implemented for {splitDefinition}.")
     };
 }

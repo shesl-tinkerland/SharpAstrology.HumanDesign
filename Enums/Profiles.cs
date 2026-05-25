@@ -31,7 +31,8 @@ public static class ProfilesExtensionMethods
         Profiles.FiveOne => (Lines.Five, Lines.One),
         Profiles.FiveTwo => (Lines.Five, Lines.Two),
         Profiles.SixTwo => (Lines.Six, Lines.Two),
-        Profiles.SixThree => (Lines.Six, Lines.Three)
+        Profiles.SixThree => (Lines.Six, Lines.Three),
+        _ => throw new NotImplementedException($"ToLines() not implemented for {profile}.")
     };
 
     public static string ToText(this Profiles profile) => profile switch
@@ -47,7 +48,8 @@ public static class ProfilesExtensionMethods
         Profiles.FiveOne => "5 / 1",
         Profiles.FiveTwo => "5 / 2",
         Profiles.SixTwo => "6 / 2",
-        Profiles.SixThree => "6 / 3"
+        Profiles.SixThree => "6 / 3",
+        _ => throw new NotImplementedException($"ToText() not implemented for {profile}.")
     };
 
     public static Angles ToAngle(this Profiles profile) => profile switch
@@ -64,5 +66,6 @@ public static class ProfilesExtensionMethods
         Profiles.FiveTwo => Angles.Left,
         Profiles.SixTwo => Angles.Left,
         Profiles.SixThree => Angles.Left,
+        _ => throw new NotImplementedException($"ToAngle() not implemented for {profile}.")
     };
 }
