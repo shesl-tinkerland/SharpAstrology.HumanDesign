@@ -45,6 +45,14 @@ dual license of the swisseph project.
 SharpAstrology.SwissEph will include SharpAstrology.Base automatically. **Use JPL files or swiss eph files for exact calculations that are in alignment with online chart calculators.**
 For explanation how to do that, please visit the original [swisseph project](https://github.com/aloistr/swisseph) on GitHub and look for **Download location of files**.
 
+### Ephemeris accuracy and the Variables (color, tone, base)
+
+The file-less Moshier mode (`EphType.Moshier`) is precise enough for gates and lines, because a line spans 56.25 arcminutes. The advanced properties sit on a much finer grid. A color spans 9.375 arcminutes, a tone spans 93.75 arcseconds and a base spans 15.625 arcseconds. The true lunar node from the analytical Moshier theory can deviate by roughly 10 to 15 arcseconds from the file-based sources. That deviation is enough to flip a tone for charts born close to a tone boundary, and with the tone the affected Variable. Ra Uru Hu's own chart is such a borderline case: its Perspective is 6-4 with swiss eph files and 6-5 in Moshier mode. Use swiss eph files or JPL files whenever you evaluate Variables, colors, tones or bases:
+
+```C#
+var ephService = new SwissEphemeridesService("[PATH_TO_EPHE_FILES]", EphType.Swiss);
+```
+
 ## Examples
 
 ### How to get chart information from a point in time?
@@ -55,7 +63,9 @@ using SharpAstrology.Ephemerides;
 using SharpAstrology.Interfaces;
 
 // Using the IEphemerides implementation from SharpAstrology.SwissEph.
-// Use swiss eph files or jpl files for more accuracy so that the results are in alignment with online HD chart calculators.
+// Use swiss eph files or jpl files for more accuracy so that the results are
+// in alignment with online HD chart calculators. This matters especially for
+// the Variables — see "Ephemeris accuracy and the Variables" above.
 var ephemeridesService = new SwissEphemeridesService(ephType: EphType.Moshier);
 using IEphemerides eph = ephemeridesService.CreateContext();
 
